@@ -1,15 +1,29 @@
 stages:
-  - build
+  - integration
   - deploy
 
 build_staging:
   image: node:latest
-  stage: build
+  stage: integration
   only:
     - develop
   script:
     - npm i -g @vue/cli@latest
-    - npm install
+    - npm i
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 28 days
+
+build_prod:
+  image: node:latest
+  stage: integration
+  only:
+    - master
+  script:
+    - npm i -g @vue/cli@latest
+    - npm i
     - npm run build
   artifacts:
     paths:
@@ -24,3 +38,22 @@ deploy_staging:
   script:
     - pip install awscli
     - aws s3 sync ./dist s3://$S3_STAGING
+
+continuous_deployment:
+  image: python:latest
+  stage: deploy
+  only:
+    - master
+  script:
+    - pip install awscli
+    - aws s3 sync ./dist s3://$S3_PROD
+
+continuous_delivery:
+  image: python:latest
+  stage: deploy
+  only:
+    - master
+  when: manual
+  script:
+    - pip install awscli
+    - aws s3 sync ./dist s3://$S3_PROD
