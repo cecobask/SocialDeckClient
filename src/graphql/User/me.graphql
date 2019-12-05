@@ -1,0 +1,18 @@
+query me {
+    me {
+        _id
+        email
+        password
+        firstName
+        lastName
+        posts {
+            _id
+            creatorID
+            createdTime
+            message
+            updatedTime
+            links
+            shares
+        }
+    }
+}

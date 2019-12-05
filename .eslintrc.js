@@ -1,19 +1,32 @@
 module.exports = {
   root: true,
+
   env: {
     node: true
   },
+
   'extends': [
     'plugin:vue/essential',
     '@vue/standard'
   ],
+
   rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
+    'no-console': 'off',
+    'no-debugger': 'off',
+    'graphql/template-strings': [
+      'error',
+      {
+        env: 'literal',
+        projectName: 'app',
+        schemaJsonFilepath: 'node_modules/.temp/graphql/schema.json'
+      }
+    ]
   },
+
   parserOptions: {
     parser: 'babel-eslint'
   },
+
   overrides: [
     {
       files: [
@@ -23,5 +36,9 @@ module.exports = {
         mocha: true
       }
     }
+  ],
+
+  plugins: [
+    'graphql'
   ]
 }
