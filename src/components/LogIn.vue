@@ -11,7 +11,7 @@
         <input class="form__input" :class="{ 'is-invalid': submitted && this.$v.email.$error }" v-model.trim="email"
                type="email" id="email" placeholder="Email"/>
         <div v-if="submitted && this.$v.email" class="invalid-feedback">
-          <span v-if="!this.$v.email.email">Email is invalid!</span>
+          <span v-if="!this.$v.email.email">* Email is invalid!</span>
         </div>
       </div>
       <div class="form-group">
@@ -19,7 +19,7 @@
         <input class="form__input" :class="{ 'is-invalid': submitted && this.$v.password.$error }"
                v-model.trim="password" type="password" id="password" placeholder="Password"/>
         <div v-if="submitted && this.$v.password.$error" class="invalid-feedback">
-          <span v-if="!this.$v.password.minLength">Password must be at least 6 characters long!</span>
+          <span v-if="!this.$v.password.minLength">* Password must be at least 6 characters long!</span>
         </div>
       </div>
       <button :disabled="buttonDisabled()" @click="logIn">SUBMIT</button>
@@ -80,6 +80,10 @@ export default {
 </script>
 
 <style scoped>
+  span {
+    font-style: italic;
+  }
+
   body,
   input {
     font-family: 'Open Sans', sans-serif;

@@ -11,7 +11,7 @@
         <input class="form__input" :class="{ 'is-invalid': submitted && this.$v.email.$error }" v-model.trim="email"
                type="email" id="email" placeholder="Email"/>
         <div v-if="submitted && this.$v.email" class="invalid-feedback">
-          <span v-if="!this.$v.email.email">Email is invalid!</span>
+          <span v-if="!this.$v.email.email">* Email is invalid!</span>
         </div>
       </div>
       <div class="form-group">
@@ -19,7 +19,7 @@
         <input class="form__input" :class="{ 'is-invalid': submitted && this.$v.fullName.$error }" v-model.trim="fullName"
                type="text" id="fullName" placeholder="Full name"/>
         <div v-if="submitted && this.$v.fullName" class="invalid-feedback">
-          <span v-if="!this.$v.fullName.firstAndSurname">Full name must consist of two words!</span>
+          <span v-if="!this.$v.fullName.firstAndSurname">* Full name must consist of two words!</span>
         </div>
       </div>
       <div class="form-group">
@@ -27,7 +27,7 @@
         <input class="form__input" :class="{ 'is-invalid': submitted && this.$v.password.$error }"
                v-model.trim="password" type="password" id="password" placeholder="Password"/>
         <div v-if="submitted && this.$v.password.$error" class="invalid-feedback">
-          <span v-if="!this.$v.password.minLength">Password must be at least 6 characters long!</span>
+          <span v-if="!this.$v.password.minLength">* Password must be at least 6 characters long!</span>
         </div>
       </div>
       <div class="form-group">
@@ -35,7 +35,7 @@
         <input class="form__input" :class="{ 'is-invalid': submitted && this.$v.confirmPass.$error }"
                v-model.trim="confirmPass" type="password" id="confirmPass" placeholder="Confirm password"/>
         <div v-if="submitted && this.$v.confirmPass.$error" class="invalid-feedback">
-          <span v-if="!this.$v.confirmPass.sameAsPassword">Passwords must match!</span>
+          <span v-if="!this.$v.confirmPass.sameAsPassword">* Passwords must match!</span>
         </div>
       </div>
       <button :disabled="buttonDisabled()" @click="signUp">SUBMIT</button>
@@ -109,6 +109,10 @@ export default {
 </script>
 
 <style scoped>
+  span {
+    font-style: italic;
+  }
+
   body,
   input {
     font-family: 'Open Sans', sans-serif;

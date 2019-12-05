@@ -61,7 +61,7 @@ async function checkAuth (next) {
     })
     .catch(err => {
       console.error(err)
-      if (this.$router.currentRoute.name !== 'LogIn') next('/login')
+      next('/login')
     })
 }
 

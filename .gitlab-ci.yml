@@ -1,0 +1,26 @@
+stages:
+  - build
+  - deploy
+
+build_staging:
+  image: node:latest
+  stage: build
+  only:
+    - develop
+  script:
+    - npm i -g @vue/cli@latest
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 28 days
+
+deploy_staging:
+  image: python:latest
+  stage: deploy
+  only:
+    - develop
+  script:
+    - pip install awscli
+    - aws s3 sync ./dist s3://$S3_STAGING
