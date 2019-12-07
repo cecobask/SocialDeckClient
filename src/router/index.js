@@ -1,14 +1,18 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '@/components/Home'
-import SignUp from '@/components/SignUp'
-import LogIn from '@/components/LogIn'
-import me from '@/graphql/User/me.graphql'
-import { apolloClient } from '@/graphql/apollo'
+import Auth from '@/components/Auth'
+// import me from '@/graphql/User/me.graphql'
+// import { apolloClient } from '@/graphql/apollo'
+import firebase from 'firebase'
 
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path: '*',
+    redirect: '/'
+  },
   {
     path: '/',
     name: 'Home',
@@ -18,14 +22,9 @@ const routes = [
     }
   },
   {
-    path: '/signup',
-    name: 'SignUp',
-    component: SignUp
-  },
-  {
-    path: '/login',
-    name: 'LogIn',
-    component: LogIn
+    path: '/auth',
+    name: 'Auth',
+    component: Auth
   },
   {
     path: '/logout',
@@ -49,20 +48,28 @@ const router = new VueRouter({
 })
 
 async function checkAuth (next) {
-  await apolloClient.query({
-    query: me,
-    variables: {
-      fakeVar: 'nothing'
-    },
-    fetchPolicy: 'no-cache'
-  })
-    .then(() => {
-      next()
-    })
-    .catch(err => {
-      console.error(err)
-      next('/login')
-    })
+  const currentUser = firebase.auth().currentUser
+
+  if (!currentUser) {
+    next('/auth')
+  } else {
+    next()
+  }
+
+  // await apolloClient.query({
+  //   query: me,
+  //   variables: {
+  //     fakeVar: 'nothing'
+  //   },
+  //   fetchPolicy: 'no-cache'
+  // })
+  //   .then(() => {
+  //     next()
+  //   })
+  //   .catch(err => {
+  //     console.error(err)
+  //     next('/login')
+  //   })
 }
 
 export default router
