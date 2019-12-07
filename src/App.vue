@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div v-if="userLoggedIn()">
+    <div v-if="currentUser">
       <b-navbar toggleable="md" variant="dark" type="dark">
         <b-navbar-brand to="/">SocialDeck Web App</b-navbar-brand>
         <b-navbar-toggle target="nav_collapse"/>
@@ -26,8 +26,7 @@
         <b-navbar-toggle target="nav_collapse"/>
         <b-collapse is-nav id="nav_collapse">
           <b-navbar-nav class="ml-auto">
-            <b-nav-item to="/signup"><i class="fa fa-sign-in" style="padding: 5px"> SIGN UP </i></b-nav-item>
-            <b-nav-item to="/login"><i class="fa fa-sign-in" style="padding: 5px"> LOG IN </i></b-nav-item>
+            <b-nav-item to="/auth"><i class="fa fa-sign-in" style="padding: 5px"> LOG IN </i></b-nav-item>
           </b-navbar-nav>
         </b-collapse>
       </b-navbar>
@@ -40,6 +39,8 @@
 
 <script>
 import logOut from '@/graphql/User/logOut.graphql'
+import fb from '../firebaseConfig'
+import { mapState } from 'vuex'
 
 export default {
   methods: {
@@ -54,10 +55,19 @@ export default {
         .catch(err => {
           console.error(err)
         })
-    },
-    userLoggedIn: function () {
-      return 'currentUser' in localStorage
+
+      fb.auth.signOut()
+        .then(() => {
+          this.$store.dispatch('clearData')
+          this.$router.push('/auth')
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
+  },
+  computed: {
+    ...mapState(['currentUser'])
   }
 }
 </script>

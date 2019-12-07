@@ -1,35 +1,44 @@
 <template>
   <div id="container">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600' rel='stylesheet'
-          type='text/css'>
-    <h1>{{title}}</h1>
-
-    <form @submit.prevent="logIn">
-      <hr>
-      <div class="form-group">
-        <label class="icon" for="email"><i class="fa fa-envelope"/></label>
-        <input class="form__input" :class="{ 'is-invalid': submitted && this.$v.email.$error }" v-model.trim="email"
-               type="email" id="email" placeholder="Email"/>
-        <div v-if="submitted && this.$v.email" class="invalid-feedback">
-          <span v-if="!this.$v.email.email">* Email is invalid!</span>
+    <vue-topprogress ref="topProgress"/>
+    <div id="form">
+      <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600' rel='stylesheet'
+            type='text/css'>
+      <h1>{{title}}</h1>
+      <form @submit.prevent="logIn">
+        <hr>
+        <div class="form-group">
+          <label class="icon" for="email"><i class="fa fa-envelope"/></label>
+          <input class="form__input" :class="{ 'is-invalid': submitted && this.$v.email.$error }" v-model.trim="email"
+                 type="email" id="email" placeholder="Email"/>
+          <div v-if="submitted && this.$v.email" class="invalid-feedback">
+            <span v-if="!this.$v.email.email">* Email is invalid!</span>
+          </div>
         </div>
-      </div>
-      <div class="form-group">
-        <label class="icon" for="password"><i class="fa fa-shield"/></label>
-        <input class="form__input" :class="{ 'is-invalid': submitted && this.$v.password.$error }"
-               v-model.trim="password" type="password" id="password" placeholder="Password"/>
-        <div v-if="submitted && this.$v.password.$error" class="invalid-feedback">
-          <span v-if="!this.$v.password.minLength">* Password must be at least 6 characters long!</span>
+        <div class="form-group">
+          <label class="icon" for="password"><i class="fa fa-shield"/></label>
+          <input class="form__input" :class="{ 'is-invalid': submitted && this.$v.password.$error }"
+                 v-model.trim="password" type="password" id="password" placeholder="Password"/>
+          <div v-if="submitted && this.$v.password.$error" class="invalid-feedback">
+            <span v-if="!this.$v.password.minLength">* Password must be at least 6 characters long!</span>
+          </div>
         </div>
-      </div>
-      <button :disabled="buttonDisabled()" @click="logIn">SUBMIT</button>
-    </form>
+        <button :disabled="buttonDisabled()" @click="logIn">SUBMIT</button>
+        <transition name="fade">
+          <div v-if="errorMsg" id="error">
+            <p>{{ errorMsg }}</p>
+          </div>
+        </transition>
+      </form>
+    </div>
+    <a @click="showSignUpForm">Don't have an account? Click here to register!</a>
   </div>
 </template>
 
 <script>
 import logIn from '@/graphql/User/logIn.graphql'
 import { email, minLength } from 'vuelidate/lib/validators'
+import fb from '../../firebaseConfig'
 
 export default {
   name: 'LogIn',
@@ -38,18 +47,27 @@ export default {
       title: 'LOG IN',
       email: '',
       password: '',
-      submitted: false
+      submitted: false,
+      errorMsg: null
     }
   },
   methods: {
-    logIn: function () {
-      this.submitted = true
-
+    logIn: async function () {
       // stop here if form is invalid
+      this.submitted = true
       this.$v.$touch()
       if (this.$v.$invalid) return
 
-      this.$apollo.mutate({
+      this.$refs.topProgress.start()
+      await fb.auth.signInWithEmailAndPassword(this.email, this.password)
+        .then(user => {
+          this.$store.commit('setCurrentUser', user.user)
+        })
+        .catch(() => {
+          this.$refs.topProgress.done()
+        })
+
+      await this.$apollo.mutate({
         mutation: logIn,
         variables: {
           email: this.email,
@@ -58,18 +76,26 @@ export default {
       })
         .then(res => {
           if (res.data.logIn) {
-            localStorage.setItem('currentUser', this.email)
             this.email = ''
             this.password = ''
-            this.$router.push('/')
           }
         })
-        .catch(err => {
-          console.error(err)
+        .catch(({ graphQLErrors }) => {
+          this.$refs.topProgress.done()
+          this.errorMsg = graphQLErrors[0].message
         })
+
+      await this.$router.push('/')
+        .then(() => {
+          this.$refs.topProgress.done()
+        })
+        .catch(() => {})
     },
     buttonDisabled: function () {
       return (!this.email || !this.password)
+    },
+    showSignUpForm: function () {
+      this.$emit('signUpVisible', true)
     }
   },
   validations: {
@@ -100,7 +126,7 @@ export default {
     margin-bottom: 10px;
   }
 
-  #container {
+  #form {
     margin: 20px auto;
     width: 400px;
     height: auto;
@@ -160,7 +186,7 @@ export default {
     margin: 10px 8px 20px 0;
     display: inline-block;
     text-decoration: none;
-    width: 100px;
+    width: auto;
     height: 30px;
     border-radius: 5px;
     background-color: #343A40;
@@ -174,12 +200,21 @@ export default {
     background-color: #1f242a;
   }
 
+  a:hover {
+    cursor: pointer;
+  }
+
   button:disabled,
   button[disabled],
-  button:disabled:hover{
+  button:disabled:hover {
     border: 1px solid #666666;
     background-color: #cccccc;
     color: #666666;
     top: 3px;
+  }
+
+  #error {
+    font-style: italic;
+    color: red;
   }
 </style>
