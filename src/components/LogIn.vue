@@ -37,6 +37,7 @@
 
 <script>
 import logIn from '@/graphql/User/logIn.graphql'
+import me from '@/graphql/User/me.graphql'
 import { email, minLength } from 'vuelidate/lib/validators'
 import fb from '../../firebaseConfig'
 
@@ -59,13 +60,11 @@ export default {
       if (this.$v.$invalid) return
 
       this.$refs.topProgress.start()
-      await fb.auth.signInWithEmailAndPassword(this.email, this.password)
+      const fbData = await fb.auth.signInWithEmailAndPassword(this.email, this.password)
         .then(user => {
-          this.$store.commit('setCurrentUser', user.user)
+          return { firebaseUID: user.user.uid }
         })
-        .catch(() => {
-          this.$refs.topProgress.done()
-        })
+        .catch(() => this.$refs.topProgress.done())
 
       await this.$apollo.mutate({
         mutation: logIn,
@@ -84,6 +83,20 @@ export default {
           this.$refs.topProgress.done()
           this.errorMsg = graphQLErrors[0].message
         })
+
+      const userData = this.$apollo.query({
+        query: me,
+        fetchPolicy: 'no-cache'
+      })
+        .then(res => {
+          const me = res.data.me
+          if (me) {
+            return me
+          }
+        })
+
+      const results = await Promise.all([fbData, userData])
+      this.$store.commit('setCurrentUser', { ...results[0], ...results[1] })
 
       await this.$router.push('/')
         .then(() => {

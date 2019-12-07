@@ -6,12 +6,15 @@
         <b-navbar-toggle target="nav_collapse"/>
         <b-collapse is-nav id="nav_collapse">
           <b-navbar-nav>
-            <b-nav-item to="/"><i class="fa fa-home" style="padding: 5px"> HOME </i></b-nav-item>
+            <b-nav-item to="/"><i class="fa fa-home" style="padding: 5px"> Home </i></b-nav-item>
             <b-nav-item to="/feed"><i class="fa fa-list" style="padding: 5px"> News Feed </i></b-nav-item>
           </b-navbar-nav>
           <b-navbar-nav class="ml-auto">
-            <b-nav-item to="/logout" @click="logOut"><i class="fa fa-sign-out" style="padding: 5px"> LOG OUT </i>
-            </b-nav-item>
+            <b-nav-item-dropdown text="Account" right>
+              <b-dropdown-header id="dropdown-header-label">{{currentUser.email}}</b-dropdown-header>
+              <b-dropdown-item to="/posts"><i class="fa fa-book"> Posts </i></b-dropdown-item>
+              <b-dropdown-item to="/logout" @click="logOut"><i class="fa fa-sign-out"> Log out </i></b-dropdown-item>
+            </b-nav-item-dropdown>
           </b-navbar-nav>
         </b-collapse>
       </b-navbar>
@@ -48,10 +51,6 @@ export default {
       this.$apollo.mutate({
         mutation: logOut
       })
-        .then(() => {
-          localStorage.removeItem('currentUser')
-          this.$router.push('/login')
-        })
         .catch(err => {
           console.error(err)
         })
@@ -79,5 +78,9 @@ export default {
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
+  }
+
+  #userName {
+    margin-right: 25px;
   }
 </style>

@@ -10,7 +10,7 @@ import Vuelidate from 'vuelidate'
 import Vuex from 'vuex'
 import { store } from '@/store/store'
 import fb from '../firebaseConfig'
-import vueTopprogress from 'vue-top-progress'
+import VueTopProgress from 'vue-top-progress'
 
 Vue.config.productionTip = false
 
@@ -18,7 +18,7 @@ Vue.use(Vuex)
 Vue.use(BootstrapVue)
 Vue.use(VueApollo)
 Vue.use(Vuelidate)
-Vue.use(vueTopprogress)
+Vue.use(VueTopProgress)
 
 // handle page reloads
 let app

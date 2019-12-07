@@ -2,8 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '@/components/Home'
 import Auth from '@/components/Auth'
-// import me from '@/graphql/User/me.graphql'
-// import { apolloClient } from '@/graphql/apollo'
+import Feed from '@/components/Feed'
 import firebase from 'firebase'
 
 Vue.use(VueRouter)
@@ -36,6 +35,7 @@ const routes = [
   {
     path: '/feed',
     name: 'Feed',
+    component: Feed,
     async beforeEnter (to, from, next) {
       await checkAuth(next)
     }
@@ -55,21 +55,6 @@ async function checkAuth (next) {
   } else {
     next()
   }
-
-  // await apolloClient.query({
-  //   query: me,
-  //   variables: {
-  //     fakeVar: 'nothing'
-  //   },
-  //   fetchPolicy: 'no-cache'
-  // })
-  //   .then(() => {
-  //     next()
-  //   })
-  //   .catch(err => {
-  //     console.error(err)
-  //     next('/login')
-  //   })
 }
 
 export default router
