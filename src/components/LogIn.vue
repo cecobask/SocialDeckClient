@@ -64,7 +64,7 @@ export default {
         .then(user => {
           return { firebaseUID: user.user.uid }
         })
-        .catch(() => this.$refs.topProgress.done())
+        .catch(() => {})
 
       await this.$apollo.mutate({
         mutation: logIn,
@@ -97,6 +97,7 @@ export default {
 
       const results = await Promise.all([fbData, userData])
       this.$store.commit('setCurrentUser', { ...results[0], ...results[1] })
+      await this.$store.dispatch('fetchAllPosts')
 
       await this.$router.push('/')
         .then(() => {

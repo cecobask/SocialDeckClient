@@ -1,38 +1,67 @@
 <template>
-  <b-container>
-      <b-col sm="4">
-        <div class="profile">
-          <h5>{{ currentUser.firstName }} {{ currentUser.lastName }}</h5>
+  <b-container v-if="currentUser">
+    <b-row align-h="center">
+      <b-col md="6">
           <div class="createPost">
-            <label for="postMessage">Create a post</label>
-            <form @submit.prevent>
-              <textarea v-model.trim="post.message" id="postMessage"/>
-              <button @click="createPost" :disabled="!post.message">PUBLISH</button>
-            </form>
+            <b-form-group label-size="lg" label="Create a post" label-for="postMessage">
+              <b-form-textarea
+                v-model.trim="post.message"
+                id="postMessage"
+                rows="3"
+                max-rows="6"
+                placeholder="Enter message here...">
+              </b-form-textarea>
+              <b-button pill variant="primary" @click="createPost" :disabled="!post.message" id="submitButton">
+                PUBLISH
+              </b-button>
+            </b-form-group>
           </div>
-        </div>
       </b-col>
-      <b-col sm="8">
-        <div v-if="!posts">
+    </b-row>
+    <b-row align-h="center">
+      <b-col md="8">
+        <div v-if="!allPosts">
           <p class="no-results">There are currently no posts</p>
         </div>
+        <div v-else>
+          <b-card v-for="post in allPosts" :key="post._id" style="margin-bottom: 20px">
+            <b-card-text>{{post.message | trimLength}}</b-card-text>
+            <template v-slot:header>
+              <h6 v-text="post.creatorFullName"/>
+              <small class="text-muted" style="margin-left: 10px">{{post.createdTime | formatDate}}</small>
+              <small v-if="post.updatedTime" class="text-muted" style="margin-left: 10px">
+                updated: {{post.updatedTime | formatDate}}
+              </small>
+            </template>
+            <template v-slot:footer>
+              <button>
+                <i class="fa fa-retweet" style="margin-right:2px"/>
+                {{post.shares.length}}
+              </button>
+            </template>
+          </b-card>
+        </div>
       </b-col>
+    </b-row>
   </b-container>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import createPost from '@/graphql/Post/createPost.graphql'
+import moment from 'moment'
 
 export default {
   name: 'Feed',
-  data () {
+  data: function () {
     return {
       post: {
         message: ''
-      },
-      posts: []
+      }
     }
+  },
+  async created () {
+    if (!this.$store.state.posts) await this.$store.dispatch('fetchAllPosts')
   },
   methods: {
     createPost: function () {
@@ -45,20 +74,36 @@ export default {
           }]
         }
       })
-        .then(res => {
-          console.log(res.data.createPost)
+        .then(() => {
+          this.post.message = null
+          this.$store.dispatch('fetchAllPosts')
         })
         .catch(({ graphQLErrors }) => {
           console.log(graphQLErrors)
+          this.post.message = null
         })
     }
   },
   computed: {
-    ...mapState(['currentUser'])
+    ...mapState(['currentUser']),
+    ...mapGetters(['currentUserPosts', 'allPosts'])
+  },
+  filters: {
+    formatDate (val) {
+      return moment(val).fromNow()
+    },
+    trimLength (val) {
+      if (val.length < 200) {
+        return val
+      }
+      return `${val.substring(0, 200)}...`
+    }
   }
 }
 </script>
 
 <style scoped>
-
+  #submitButton {
+    margin: 10px;
+  }
 </style>

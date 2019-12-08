@@ -82,6 +82,7 @@ export default {
         .then(user => {
           return { firebaseUID: user.user.uid }
         })
+        .catch(() => {})
 
       let [firstName, lastName] = this.fullName.split(' ')
       await this.$apollo.mutate({
@@ -119,6 +120,7 @@ export default {
 
       const results = await Promise.all([fbData, userData])
       this.$store.commit('setCurrentUser', { ...results[0], ...results[1] })
+      await this.$store.dispatch('fetchAllPosts')
 
       await this.$router.push('/')
         .then(() => {

@@ -3,7 +3,8 @@ import VueRouter from 'vue-router'
 import Home from '@/components/Home'
 import Auth from '@/components/Auth'
 import Feed from '@/components/Feed'
-import firebase from 'firebase'
+import firebase from 'firebase/app'
+import 'firebase/auth'
 
 Vue.use(VueRouter)
 

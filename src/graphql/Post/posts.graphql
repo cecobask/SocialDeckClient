@@ -1,8 +1,5 @@
-mutation createPost($message: String!, $links: [LinkInput!]) {
-    createPost(
-        message: $message
-        links: $links
-    ) {
+query posts {
+    posts {
         _id
         creatorID
         creatorFullName
