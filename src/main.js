@@ -11,6 +11,7 @@ import Vuex from 'vuex'
 import { store } from '@/store/store'
 import fb from '../firebaseConfig'
 import VueTopProgress from 'vue-top-progress'
+import VModal from 'vue-js-modal'
 
 Vue.config.productionTip = false
 
@@ -19,6 +20,7 @@ Vue.use(BootstrapVue)
 Vue.use(VueApollo)
 Vue.use(Vuelidate)
 Vue.use(VueTopProgress)
+Vue.use(VModal, { dialog: true })
 
 // handle page reloads
 let app

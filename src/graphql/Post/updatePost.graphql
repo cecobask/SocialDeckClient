@@ -1,0 +1,16 @@
+mutation updatePost($postID: String!, $message: String!, $links: [LinkInput!]) {
+    updatePost(
+        postID: $postID
+        message: $message
+        links: $links
+    ) {
+        _id
+        creatorID
+        creatorFullName
+        createdTime
+        message
+        updatedTime
+        links
+        shares
+    }
+}
