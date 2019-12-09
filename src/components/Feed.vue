@@ -34,7 +34,7 @@
               </small>
             </template>
             <template v-slot:footer>
-              <button>
+              <button :disabled="userShared(post)" @click="sharePost(post._id)">
                 <i class="fa fa-retweet" style="margin-right:2px"/>
                 {{post.shares.length}}
               </button>
@@ -49,6 +49,8 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 import createPost from '@/graphql/Post/createPost.graphql'
+import sharePost from '@/graphql/Post/sharePost.graphql'
+
 import moment from 'moment'
 
 export default {
@@ -82,6 +84,23 @@ export default {
           console.log(graphQLErrors)
           this.post.message = null
         })
+    },
+    sharePost: function (_id) {
+      this.$apollo.mutate({
+        mutation: sharePost,
+        variables: {
+          postID: _id
+        }
+      })
+        .then(() => {
+          this.$store.dispatch('fetchAllPosts')
+        })
+        .catch(({ graphQLErrors }) => {
+          console.log(graphQLErrors)
+        })
+    },
+    userShared: function (post) {
+      return post.shares.some(userID => this.$store.state.currentUser._id === userID ? 1 : 0)
     }
   },
   computed: {
