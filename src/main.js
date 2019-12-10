@@ -22,7 +22,7 @@ Vue.use(Vuelidate)
 Vue.use(VueTopProgress)
 Vue.use(VModal, { dialog: true })
 
-// handle page reloads
+// Handle page reloads.
 let app
 fb.auth.onAuthStateChanged(user => {
   if (!app) {

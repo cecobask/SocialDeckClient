@@ -35,6 +35,7 @@ export const store = new Vuex.Store({
   },
   actions: {
     clearData ({ commit }) {
+      commit('setCurrentUserPosts', null)
       commit('setCurrentUser', null)
       commit('setPosts', null)
     },
@@ -45,9 +46,21 @@ export const store = new Vuex.Store({
       })
         .then(res => {
           let results = res.data.posts
-
           if (results) {
             commit('setPosts', results)
+          }
+        })
+        .catch(() => {})
+    },
+    fetchUserPosts ({ commit }) {
+      apolloClient.query({
+        query: me,
+        fetchPolicy: 'no-cache'
+      })
+        .then(res => {
+          let posts = res.data.me.posts
+          if (posts) {
+            commit('setCurrentUserPosts', posts)
           }
         })
         .catch(() => {})
@@ -59,6 +72,9 @@ export const store = new Vuex.Store({
     },
     setPosts (state, val) {
       state.posts = val
+    },
+    setCurrentUserPosts (state, val) {
+      state.currentUser.posts = val
     }
   },
   getters: {
@@ -68,9 +84,9 @@ export const store = new Vuex.Store({
         .sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime))
     },
     currentUserPosts: state => {
-      const up = state.currentUser.posts
-      if (!up) return
-      return up.sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime))
+      const cu = state.currentUser
+      if (!cu || !cu.posts) return
+      return cu.posts.sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime))
     }
   }
 })
