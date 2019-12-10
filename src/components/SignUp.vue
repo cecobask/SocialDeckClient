@@ -55,6 +55,7 @@
 import signUp from '@/graphql/User/signUp.graphql'
 import { email, minLength, sameAs } from 'vuelidate/lib/validators'
 import fb from '../../firebaseConfig'
+import me from '@/graphql/User/me.graphql'
 
 export default {
   name: 'SignUp',
@@ -77,13 +78,11 @@ export default {
       if (this.$v.$invalid) return
 
       this.$refs.topProgress.start()
-      await fb.auth.createUserWithEmailAndPassword(this.email, this.password)
+      const fbData = await fb.auth.createUserWithEmailAndPassword(this.email, this.password)
         .then(user => {
-          this.$store.commit('setCurrentUser', user.user)
+          return { firebaseUID: user.user.uid }
         })
-        .catch(() => {
-          this.$refs.topProgress.done()
-        })
+        .catch(() => {})
 
       let [firstName, lastName] = this.fullName.split(' ')
       await this.$apollo.mutate({
@@ -107,6 +106,21 @@ export default {
           this.$refs.topProgress.done()
           this.errorMsg = graphQLErrors[0].message
         })
+
+      const userData = this.$apollo.query({
+        query: me,
+        fetchPolicy: 'no-cache'
+      })
+        .then(res => {
+          const me = res.data.me
+          if (me) {
+            return me
+          }
+        })
+
+      const results = await Promise.all([fbData, userData])
+      this.$store.commit('setCurrentUser', { ...results[0], ...results[1] })
+      await this.$store.dispatch('fetchAllPosts')
 
       await this.$router.push('/')
         .then(() => {

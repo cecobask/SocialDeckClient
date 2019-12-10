@@ -1,0 +1,12 @@
+mutation sharePost($postID: String!) {
+    sharePost(postID: $postID) {
+        _id
+        creatorID
+        creatorFullName
+        createdTime
+        message
+        updatedTime
+        links
+        shares
+    }
+}

@@ -1,17 +1,24 @@
 <template>
   <div id="app">
+    <vue-topprogress ref="topProgress"/>
     <div v-if="currentUser">
       <b-navbar toggleable="md" variant="dark" type="dark">
-        <b-navbar-brand to="/">SocialDeck Web App</b-navbar-brand>
+        <b-navbar-brand to="/dashboard">SocialDeck Web App</b-navbar-brand>
         <b-navbar-toggle target="nav_collapse"/>
         <b-collapse is-nav id="nav_collapse">
           <b-navbar-nav>
-            <b-nav-item to="/"><i class="fa fa-home" style="padding: 5px"> HOME </i></b-nav-item>
-            <b-nav-item to="/feed"><i class="fa fa-list" style="padding: 5px"> News Feed </i></b-nav-item>
+            <b-nav-item to="/dashboard"><i class="fa fa-columns" > Dashboard </i></b-nav-item>
           </b-navbar-nav>
           <b-navbar-nav class="ml-auto">
-            <b-nav-item to="/logout" @click="logOut"><i class="fa fa-sign-out" style="padding: 5px"> LOG OUT </i>
-            </b-nav-item>
+            <b-nav-item-dropdown right>
+              <template slot="button-content">
+                <i class="fa fa-user-circle"/>
+                <b-nav-text>Account</b-nav-text>
+              </template>
+              <b-dropdown-header id="dropdown-header-label">{{currentUser.email}}</b-dropdown-header>
+              <b-dropdown-item to="/ownposts"><i class="fa fa-book"> Your posts </i></b-dropdown-item>
+              <b-dropdown-item to="/logout" @click="logOut"><i class="fa fa-sign-out"> Log out </i></b-dropdown-item>
+            </b-nav-item-dropdown>
           </b-navbar-nav>
         </b-collapse>
       </b-navbar>
@@ -22,7 +29,7 @@
 
     <div v-else>
       <b-navbar toggleable="md" variant="dark" type="dark">
-        <b-navbar-brand to="/">SocialDeck Web App</b-navbar-brand>
+        <b-navbar-brand>SocialDeck Web App</b-navbar-brand>
         <b-navbar-toggle target="nav_collapse"/>
         <b-collapse is-nav id="nav_collapse">
           <b-navbar-nav class="ml-auto">
@@ -45,22 +52,19 @@ import { mapState } from 'vuex'
 export default {
   methods: {
     logOut: function () {
-      this.$apollo.mutate({
-        mutation: logOut
-      })
+      this.$refs.topProgress.start()
+      this.$apollo.mutate({ mutation: logOut })
         .then(() => {
-          localStorage.removeItem('currentUser')
-          this.$router.push('/login')
+          this.$router.push('/auth')
+          this.$store.dispatch('clearData')
+          this.$refs.topProgress.done()
         })
-        .catch(err => {
-          console.error(err)
+        .catch(({ graphQLErrors }) => {
+          this.$refs.topProgress.done()
+          console.error(graphQLErrors)
         })
 
       fb.auth.signOut()
-        .then(() => {
-          this.$store.dispatch('clearData')
-          this.$router.push('/auth')
-        })
         .catch(err => {
           console.log(err)
         })
@@ -79,5 +83,9 @@ export default {
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
+  }
+
+  i {
+    padding: 5px
   }
 </style>

@@ -1,0 +1,12 @@
+mutation deletePostById($_id: String!) {
+    deletePostById(_id: $_id) {
+        _id
+        creatorID
+        creatorFullName
+        createdTime
+        message
+        updatedTime
+        links
+        shares
+    }
+}

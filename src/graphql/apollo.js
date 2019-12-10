@@ -11,9 +11,6 @@ export const apolloClient = new ApolloClient({
       isEditMode: false
     },
     resolvers: {}
-  },
-  defaultOptions: {
-    fetchPolicy: 'no-cache'
   }
 })
 

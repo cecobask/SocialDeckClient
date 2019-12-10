@@ -8,6 +8,7 @@ query me {
         posts {
             _id
             creatorID
+            creatorFullName
             createdTime
             message
             updatedTime

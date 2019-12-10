@@ -1,0 +1,12 @@
+query posts {
+    posts {
+        _id
+        creatorID
+        creatorFullName
+        createdTime
+        message
+        updatedTime
+        links
+        shares
+    }
+}

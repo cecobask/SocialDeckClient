@@ -1,30 +1,36 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '@/components/Home'
 import Auth from '@/components/Auth'
-// import me from '@/graphql/User/me.graphql'
-// import { apolloClient } from '@/graphql/apollo'
-import firebase from 'firebase'
+import Dashboard from '@/components/Dashboard'
+import OwnPosts from '@/components/OwnPosts'
+import firebase from 'firebase/app'
+import 'firebase/auth'
+import { apolloClient } from '@/graphql/apollo'
+import me from '@/graphql/User/me.graphql'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '*',
-    redirect: '/'
+    path: '/auth',
+    name: 'Auth',
+    component: Auth
   },
   {
-    path: '/',
-    name: 'Home',
-    component: Home,
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: Dashboard,
     async beforeEnter (to, from, next) {
       await checkAuth(next)
     }
   },
   {
-    path: '/auth',
-    name: 'Auth',
-    component: Auth
+    path: '/ownposts',
+    name: 'OwnPosts',
+    component: OwnPosts,
+    async beforeEnter (to, from, next) {
+      await checkAuth(next)
+    }
   },
   {
     path: '/logout',
@@ -34,8 +40,8 @@ const routes = [
     }
   },
   {
-    path: '/feed',
-    name: 'Feed',
+    path: '*',
+    redirect: '/dashboard',
     async beforeEnter (to, from, next) {
       await checkAuth(next)
     }
@@ -48,28 +54,16 @@ const router = new VueRouter({
 })
 
 async function checkAuth (next) {
-  const currentUser = firebase.auth().currentUser
+  const fbUser = firebase.auth().currentUser
+  const currentUser = await apolloClient
+    .query({ query: me, fetchPolicy: 'no-cache' })
+    .catch(() => null)
 
-  if (!currentUser) {
+  if (!fbUser || !currentUser) {
     next('/auth')
   } else {
     next()
   }
-
-  // await apolloClient.query({
-  //   query: me,
-  //   variables: {
-  //     fakeVar: 'nothing'
-  //   },
-  //   fetchPolicy: 'no-cache'
-  // })
-  //   .then(() => {
-  //     next()
-  //   })
-  //   .catch(err => {
-  //     console.error(err)
-  //     next('/login')
-  //   })
 }
 
 export default router
