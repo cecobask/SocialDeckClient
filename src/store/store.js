@@ -31,13 +31,13 @@ fb.auth.onAuthStateChanged(async user => {
 export const store = new Vuex.Store({
   state: {
     currentUser: null,
-    posts: null
+    posts: []
   },
   actions: {
     clearData ({ commit }) {
-      commit('setCurrentUserPosts', null)
+      commit('setCurrentUserPosts', [])
       commit('setCurrentUser', null)
-      commit('setPosts', null)
+      commit('setPosts', [])
     },
     fetchAllPosts ({ commit }) {
       apolloClient.query({
@@ -50,7 +50,9 @@ export const store = new Vuex.Store({
             commit('setPosts', results)
           }
         })
-        .catch(() => {})
+        .catch(() => {
+          commit('setPosts', [])
+        })
     },
     fetchUserPosts ({ commit }) {
       apolloClient.query({
@@ -79,13 +81,13 @@ export const store = new Vuex.Store({
   },
   getters: {
     allPosts: state => {
-      if (!state.posts) return
+      if (!state.posts) return []
       return state.posts
         .sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime))
     },
     currentUserPosts: state => {
       const cu = state.currentUser
-      if (!cu || !cu.posts) return
+      if (!cu || !cu.posts) return []
       return cu.posts.sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime))
     }
   }

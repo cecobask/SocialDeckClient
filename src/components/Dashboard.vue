@@ -12,7 +12,7 @@
               max-rows="6"
               placeholder="Enter message here...">
             </b-form-textarea>
-            <b-button pill variant="primary" @click="createPost" :disabled="!createForm.message" style="margin: 10px">
+            <b-button pill variant="primary" @click="createPost" :disabled="!createForm.message" style="margin: 10px" id="createPost">
               PUBLISH
             </b-button>
           </b-form-group>
@@ -20,7 +20,7 @@
       </b-col>
     </b-row>
     <b-row align-h="center">
-      <b-col md="8">
+      <b-col md="8" id="postsFeed">
         <PostsFeed :posts="allPosts"/>
       </b-col>
     </b-row>

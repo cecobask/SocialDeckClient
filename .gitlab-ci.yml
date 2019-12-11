@@ -1,16 +1,48 @@
 stages:
-  - integration
+  - build
+  - test
   - deploy
 
-build_and_test:
+variables:
+  npm_config_cache: "$CI_PROJECT_DIR/.npm"
+  CYPRESS_CACHE_FOLDER: "$CI_PROJECT_DIR/cache/Cypress"
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - .npm
+    - cache/Cypress
+    - node_modules
+
+build_staging:
   image: cypress/base:10
-  stage: integration
+  stage: build
+  variables:
+    NODE_ENV: 'staging'
   only:
     - develop
+  before_script:
+    - npm i -g @vue/cli@latest
+    - npm ci
+  script:
+    - npm run build
+    - npm run test:e2e:headless
+    - echo "E2E tests passed. Video recoding uploaded to https://dashboard.cypress.io/projects/n4jj7m/runs/"
+  artifacts:
+    paths:
+      - dist/*
+    expire_in: 28 days
+
+build_prod:
+  image: cypress/base:10
+  stage: build
+  variables:
+    NODE_ENV: 'prod'
+  only:
     - master
   before_script:
     - npm i -g @vue/cli@latest
-    - npm i
+    - npm ci
   script:
     - npm run build
     - npm run test:e2e:headless

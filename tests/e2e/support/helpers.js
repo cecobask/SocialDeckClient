@@ -1,10 +1,16 @@
-// const { apolloClient } = require('../../../src/graphql/apollo')
-// const logInQ = require('../../../src/graphql/User/logIn.graphql')
-// const Users = require('../fixtures/Users')
-
 export function logOut () {
   cy.get('#dropdown__BV_button_').click()
   cy.get('#logout').click()
+  cy.wait(500)
+  cy.visit('/')
+}
+
+export function logIn (email, password) {
+  cy.visit('/')
+  cy.get('#email').type(email)
+  cy.get('#password').type(password)
+  cy.get('#submitBtn').click()
+  cy.wait(500)
 }
 
 export function getRandomInt (min, max) {

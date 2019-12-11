@@ -4,6 +4,11 @@
     "fullName": "Tsvetoslav Dimov",
     "password": "123456"
   },
+  "validUser2": {
+    "email": "cecobask@yahoo.com",
+    "fullName": "Test Johnson",
+    "password": "123456"
+  },
   "invalidPasswordUser": {
     "email": "baskski@gmail.com",
     "password": "654321"

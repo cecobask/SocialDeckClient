@@ -1,6 +1,5 @@
 import Users from '../fixtures/Users'
 import { logOut, getRandomInt } from '../support/helpers'
-// const getStore = () => cy.window().its('__store__')
 
 describe('Authentication page', () => {
   context('When a user enters the log in page', () => {
