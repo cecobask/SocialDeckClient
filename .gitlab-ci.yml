@@ -2,29 +2,20 @@ stages:
   - integration
   - deploy
 
-build_staging:
+build_and_test:
   image: node:latest
   stage: integration
   only:
     - develop
-  script:
-    - npm i -g @vue/cli@latest
-    - npm i
-    - npm run build
-  artifacts:
-    paths:
-      - dist/
-    expire_in: 28 days
-
-build_prod:
-  image: node:latest
-  stage: integration
-  only:
     - master
-  script:
+  before_script:
+    - apt-get update -y && apt-get install xvfb -y
     - npm i -g @vue/cli@latest
     - npm i
+  script:
     - npm run build
+    - npm run test:e2e:headless
+    - echo "E2E tests passed. Video recoding uploaded to https://dashboard.cypress.io/projects/n4jj7m/runs/"
   artifacts:
     paths:
       - dist/

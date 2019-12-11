@@ -2,5 +2,6 @@
   "pluginsFile": "tests/e2e/plugins/index.js",
   "baseUrl": "http://localhost:8080/",
   "pageLoadTimeout": 9000,
-  "requestTimeout": 9000
+  "requestTimeout": 9000,
+  "projectId": "n4jj7m"
 }
