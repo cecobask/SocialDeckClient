@@ -1,6 +1,7 @@
 {
   "validUser": {
     "email": "baskski@gmail.com",
+    "fullName": "Tsvetoslav Dimov",
     "password": "123456"
   },
   "invalidPasswordUser": {
@@ -18,5 +19,13 @@
   "invalidPasswordFormatUser": {
     "email": "nonexistent@example.com",
     "password": "123"
+  },
+  "newUser": {
+    "email": "new@yahoo.com",
+    "fullName": "Larry Staples",
+    "password": "LArrY1243"
+  },
+  "invalidFullNameFormatUser": {
+    "fullName": "Larry"
   }
 }

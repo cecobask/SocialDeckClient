@@ -90,3 +90,7 @@ export const store = new Vuex.Store({
     }
   }
 })
+
+if (window.Cypress) {
+  window.__store__ = store
+}
