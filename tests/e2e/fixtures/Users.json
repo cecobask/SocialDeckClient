@@ -1,0 +1,22 @@
+{
+  "validUser": {
+    "email": "baskski@gmail.com",
+    "password": "123456"
+  },
+  "invalidPasswordUser": {
+    "email": "baskski@gmail.com",
+    "password": "654321"
+  },
+  "invalidEmailUser": {
+    "email": "nonexistent@example.com",
+    "password": "123456"
+  },
+  "invalidEmailFormatUser": {
+    "email": "nonexistent@",
+    "password": "123456"
+  },
+  "invalidPasswordFormatUser": {
+    "email": "nonexistent@example.com",
+    "password": "123"
+  }
+}
