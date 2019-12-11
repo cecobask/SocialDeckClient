@@ -3,13 +3,12 @@ stages:
   - deploy
 
 build_and_test:
-  image: node:latest
+  image: cypress/base:10
   stage: integration
   only:
     - develop
     - master
   before_script:
-    - apt-get update -y && apt-get install xvfb -y
     - npm i -g @vue/cli@latest
     - npm i
   script:
@@ -18,7 +17,7 @@ build_and_test:
     - echo "E2E tests passed. Video recoding uploaded to https://dashboard.cypress.io/projects/n4jj7m/runs/"
   artifacts:
     paths:
-      - dist/
+      - dist/*
     expire_in: 28 days
 
 deploy_staging:

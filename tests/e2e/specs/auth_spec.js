@@ -3,7 +3,7 @@ import { logOut } from '../support/helpers'
 
 describe('Authentication page', () => {
   beforeEach(function () {
-    cy.visit('/')
+    cy.visit('/', { timeout: 15000 })
   })
   context('When an unauthenticated user enters', () => {
     describe('and is an invalid user', () => {
