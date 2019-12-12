@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!posts">
+  <div v-if="!posts.length">
     <p class="no-results">There are currently no posts</p>
   </div>
   <div v-else>
@@ -8,7 +8,7 @@
     <b-card v-for="post in posts" :key="post._id" style="margin-bottom: 20px">
       <b-card-text v-if="post.message.length < 200" class="postCard">{{post.message}}</b-card-text>
       <b-card-text v-else class="postCard">{{post.message | trimLength}}
-        <a href="javascript:{}" @click="loadFullPost(post._id)">Show full post</a>
+        <a href="javascript:{}" @click="loadFullPost(post._id)" id="showMore">Show full post</a>
       </b-card-text>
       <b-modal :id="post._id+'display'" :title="post.creatorFullName" header-bg-variant="dark"
                header-text-variant="light" hide-footer>
@@ -57,6 +57,7 @@
         <b-modal :id="post._id" title="Edit post" header-bg-variant="dark" header-text-variant="light"
                  modal-ok="publish">
           <b-form-textarea
+            id="textarea"
             v-model="editForm.message"
             rows="3"
             max-rows="6">

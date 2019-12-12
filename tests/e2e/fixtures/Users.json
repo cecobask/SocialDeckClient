@@ -1,0 +1,36 @@
+{
+  "validUser": {
+    "email": "baskski@gmail.com",
+    "fullName": "Tsvetoslav Dimov",
+    "password": "123456"
+  },
+  "validUser2": {
+    "email": "cecobask@yahoo.com",
+    "fullName": "Test Johnson",
+    "password": "123456"
+  },
+  "invalidPasswordUser": {
+    "email": "baskski@gmail.com",
+    "password": "654321"
+  },
+  "invalidEmailUser": {
+    "email": "nonexistent@example.com",
+    "password": "123456"
+  },
+  "invalidEmailFormatUser": {
+    "email": "nonexistent@",
+    "password": "123456"
+  },
+  "invalidPasswordFormatUser": {
+    "email": "nonexistent@example.com",
+    "password": "123"
+  },
+  "newUser": {
+    "email": "new@yahoo.com",
+    "fullName": "Larry Staples",
+    "password": "LArrY1243"
+  },
+  "invalidFullNameFormatUser": {
+    "fullName": "Larry"
+  }
+}

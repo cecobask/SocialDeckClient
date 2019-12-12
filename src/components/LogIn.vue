@@ -23,7 +23,7 @@
             <span v-if="!this.$v.password.minLength">* Password must be at least 6 characters long!</span>
           </div>
         </div>
-        <button :disabled="buttonDisabled()" @click="logIn">SUBMIT</button>
+        <button :disabled="buttonDisabled()" @click="logIn" id="submitBtn">SUBMIT</button>
         <transition name="fade">
           <div v-if="errorMsg" id="error">
             <p>{{ errorMsg }}</p>

@@ -3,8 +3,9 @@ import VueApollo from 'vue-apollo'
 import Vue from 'vue'
 
 export const apolloClient = new ApolloClient({
-  // You should use an absolute URL here
-  uri: process.env.VUE_APP_API_URL,
+  uri: process.env.NODE_ENV === 'staging'
+    ? process.env.VUE_APP_TEST_API_URI
+    : process.env.VUE_APP_API_URI,
   credentials: 'include',
   clientState: {
     defaults: {

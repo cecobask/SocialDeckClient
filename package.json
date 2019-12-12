@@ -7,6 +7,7 @@
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
+    "test:e2e:headless": "vue-cli-service test:e2e --headless",
     "lint": "vue-cli-service lint",
     "postinstall": "rimraf ./dist && mkdir dist"
   },
@@ -14,6 +15,7 @@
     "apollo-boost": "^0.4.4",
     "bootstrap-vue": "^2.1.0",
     "core-js": "^3.4.3",
+    "cypress": "^3.7.0",
     "firebase": "^7.5.1",
     "graphql": "^14.5.8",
     "vue": "^2.6.10",
@@ -43,6 +45,7 @@
     "node-sass": "^4.12.0",
     "sass-loader": "^8.0.0",
     "vue-template-compiler": "^2.6.10",
-    "vuelidate": "^0.7.4"
+    "vuelidate": "^0.7.4",
+    "@cypress/webpack-preprocessor": "latest"
   }
 }

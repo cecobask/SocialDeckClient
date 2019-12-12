@@ -10,14 +10,14 @@
             <b-nav-item to="/dashboard"><i class="fa fa-columns" > Dashboard </i></b-nav-item>
           </b-navbar-nav>
           <b-navbar-nav class="ml-auto">
-            <b-nav-item-dropdown right>
+            <b-nav-item-dropdown right id="dropdown">
               <template slot="button-content">
                 <i class="fa fa-user-circle"/>
                 <b-nav-text>Account</b-nav-text>
               </template>
               <b-dropdown-header id="dropdown-header-label">{{currentUser.email}}</b-dropdown-header>
               <b-dropdown-item to="/ownposts"><i class="fa fa-book"> Your posts </i></b-dropdown-item>
-              <b-dropdown-item to="/logout" @click="logOut"><i class="fa fa-sign-out"> Log out </i></b-dropdown-item>
+              <b-dropdown-item to="/logout" @click="logOut" id="logout"><i class="fa fa-sign-out"> Log out </i></b-dropdown-item>
             </b-nav-item-dropdown>
           </b-navbar-nav>
         </b-collapse>
@@ -33,7 +33,7 @@
         <b-navbar-toggle target="nav_collapse"/>
         <b-collapse is-nav id="nav_collapse">
           <b-navbar-nav class="ml-auto">
-            <b-nav-item to="/auth"><i class="fa fa-sign-in" style="padding: 5px"> LOG IN </i></b-nav-item>
+            <b-nav-item to="/auth"><i class="fa fa-sign-in" style="padding: 5px"> Log in </i></b-nav-item>
           </b-navbar-nav>
         </b-collapse>
       </b-navbar>
