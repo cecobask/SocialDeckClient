@@ -33,7 +33,7 @@
         <b-navbar-toggle target="nav_collapse"/>
         <b-collapse is-nav id="nav_collapse">
           <b-navbar-nav class="ml-auto">
-            <b-nav-item to="/auth"><i class="fa fa-sign-in" style="padding: 5px"> LOG IN </i></b-nav-item>
+            <b-nav-item to="/auth"><i class="fa fa-sign-in" style="padding: 5px"> Log in </i></b-nav-item>
           </b-navbar-nav>
         </b-collapse>
       </b-navbar>

@@ -1,6 +1,6 @@
 import Users from '../fixtures/Users'
 import Posts from '../fixtures/Posts'
-import { logOut, logIn } from '../support/helpers'
+import { createPost, deleteFirstPost, logIn, logOut } from '../support/helpers'
 
 describe('Dashboard page', () => {
   context('When a user tries to create a post', () => {
@@ -14,7 +14,7 @@ describe('Dashboard page', () => {
       cy.get('#createPost')
         .should('not.be.disabled')
         .click()
-      cy.wait(500)
+      cy.wait(1000)
       cy.get('#postsFeed')
         .find('.card')
         .its('length')
@@ -52,11 +52,7 @@ describe('Dashboard page', () => {
   context('When a user tries to delete a post', () => {
     before(function () {
       logIn(Users.validUser2.email, Users.validUser2.password)
-      cy.get('#postMessage')
-        .type(Posts.shortPost)
-      cy.get('#createPost')
-        .click()
-      cy.wait(500)
+      createPost(Posts.shortPost)
       logOut()
       logIn(Users.validUser.email, Users.validUser.password)
     })
@@ -73,7 +69,7 @@ describe('Dashboard page', () => {
         .find('.card-footer > .btn-danger')
         .click()
       cy.get('body').type('{enter}')
-      cy.wait(300)
+      cy.wait(1000)
       cy.get('#postsFeed')
         .find('.card')
         .its('length')
@@ -91,14 +87,75 @@ describe('Dashboard page', () => {
     })
     after(function () {
       logIn(Users.validUser2.email, Users.validUser2.password)
+      deleteFirstPost()
+      logOut()
+    })
+  })
+
+  context('When a user tries to edit a post', () => {
+    before(function () {
+      logIn(Users.validUser2.email, Users.validUser2.password)
+      createPost(Posts.shortPost)
+      logOut()
+      logIn(Users.validUser.email, Users.validUser.password)
+    })
+    it('should be successful if the user is the post creator', function () {
+      cy.get('#postMessage').should('be.empty')
+        .type(Posts.shortPost)
+      cy.get('#createPost')
+        .should('not.be.disabled')
+        .click()
+      cy.wait(500)
+      cy.get('#postsFeed')
+        .find('.card')
+        .first()
+        .find('.card-footer > .btn-primary')
+        .click()
+      cy.get('.modal-content').should('be.visible')
+      cy.get('#textarea').should('have.value', Posts.shortPost)
+        .clear().type(Posts.editedPost)
+      cy.get('.btn-success').click()
+      cy.wait(300)
+      cy.get(':nth-child(1) > .card-body > .card-text').contains(Posts.editedPost)
+      cy.get('.card-footer > .btn-danger').click()
+      cy.get('body').type('{enter}')
+    })
+    it('should fail if the user is not the post creator', function () {
       cy.get('#postsFeed')
         .find('.card')
         .first()
         .find('.card-footer')
         .find('.btn')
         .eq(1)
+        .should('have.class', 'disabled')
+      logOut()
+    })
+    after(function () {
+      logIn(Users.validUser2.email, Users.validUser2.password)
+      deleteFirstPost()
+      logOut()
+    })
+  })
+
+  context('When a user tries to share a post', () => {
+    before(function () {
+      logIn(Users.validUser.email, Users.validUser.password)
+      createPost(Posts.shortPost)
+      cy.wait(500)
+    })
+    it('should be successful if the user hasn\'t shared the post before', function () {
+      cy.get('.btn-secondary').should('contain', '0')
         .click()
-      cy.get('body').type('{enter}')
+      cy.wait(300)
+      cy.get('.btn-secondary').should('contain', '1')
+        .and('have.class', 'disabled')
+    })
+    it('should fail if the user has shared the post before', function () {
+      cy.get('.btn-secondary').should('contain', '1')
+        .and('have.class', 'disabled')
+    })
+    after(function () {
+      deleteFirstPost()
       logOut()
     })
   })
@@ -106,11 +163,7 @@ describe('Dashboard page', () => {
   context('When a user finds a long post', () => {
     it('should be able to view its full contents', function () {
       logIn(Users.validUser2.email, Users.validUser2.password)
-      cy.get('#postMessage')
-        .type(Posts.longPost)
-      cy.get('#createPost')
-        .click()
-      cy.wait(500)
+      createPost(Posts.longPost)
       cy.get('#showMore')
         .click()
       cy.wait(500)
@@ -134,6 +187,20 @@ describe('Dashboard page', () => {
         .should('not.exist')
       cy.get('.no-results').should('exist')
         .contains('There are currently no posts')
+      logOut()
+    })
+  })
+
+  context('Navigation bar', () => {
+    it('should display the right elements', function () {
+      logIn(Users.validUser.email, Users.validUser.password)
+      cy.wait(1000)
+      cy.get('#nav_collapse ul').its('length').should('eq', 3)
+      cy.get('#nav_collapse ul')
+        .should('contain', 'Dashboard')
+        .and('contain', 'Account')
+        .and('contain', 'Log out')
+        .and('contain', 'Your posts')
       logOut()
     })
   })

@@ -57,6 +57,7 @@
         <b-modal :id="post._id" title="Edit post" header-bg-variant="dark" header-text-variant="light"
                  modal-ok="publish">
           <b-form-textarea
+            id="textarea"
             v-model="editForm.message"
             rows="3"
             max-rows="6">
