@@ -8,6 +8,7 @@
 <script>
 import LogIn from '@/components/LogIn'
 import SignUp from '@/components/SignUp'
+import me from '@/graphql/User/me.graphql'
 
 export default {
   name: 'Auth',
@@ -24,6 +25,13 @@ export default {
     toggleForm (bool) {
       this.showSignUpForm = bool
     }
+  },
+  created: function () {
+    this.$apollo.query({
+      query: me,
+      fetchPolicy: 'no-cache'
+    })
+      .catch(() => {})
   }
 }
 </script>
