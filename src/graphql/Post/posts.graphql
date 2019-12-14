@@ -8,5 +8,6 @@ query posts {
         updatedTime
         links
         shares
+        likes
     }
 }

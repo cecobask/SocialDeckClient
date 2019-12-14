@@ -15,12 +15,13 @@ export function logIn (email, password) {
 }
 
 export function deleteFirstPost () {
+  cy.wait(2000)
   cy.get('#postsFeed')
     .find('.card')
     .first()
     .find('.card-footer')
     .find('.btn')
-    .eq(1)
+    .eq(2)
     .click()
   cy.get('body').type('{enter}')
 }
