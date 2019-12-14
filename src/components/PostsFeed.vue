@@ -28,7 +28,11 @@
         </small>
       </template>
       <template v-slot:footer>
-        <b-button :disabled="userShared(post)" @click="sharePost(post._id)" class="postActionButton">
+        <b-button @click="likePost(post._id)" class="postActionButton" variant="primary">
+          <i :class="userLiked(post) ? 'fa fa-thumbs-down' : 'fa fa-thumbs-up'"/>
+          {{post.likes.length}}
+        </b-button>
+        <b-button @click="sharePost(post._id)" class="postActionButton" variant="dark">
           <i class="fa fa-retweet"/>
           {{post.shares.length}}
         </b-button>
@@ -40,7 +44,7 @@
           </span>
           <b-tooltip :target="post._id+'delete'" triggers="hover">Can only be deleted by owner!</b-tooltip>
           <span :id="post._id+'edit'">
-            <b-button :disabled="true" class="postActionButton" variant="primary">
+            <b-button :disabled="true" class="postActionButton" variant="info">
               <i class="fa fa-edit"/>
             </b-button>
           </span>
@@ -50,7 +54,7 @@
           <b-button @click="deletePost(post._id)" class="postActionButton" variant="danger">
             <i class="fa fa-trash"/>
           </b-button>
-          <b-button class="postActionButton" variant="primary" v-b-modal="post._id" @click="populateForm(post)">
+          <b-button class="postActionButton" variant="info" v-b-modal="post._id" @click="populateForm(post)">
             <i class="fa fa-edit"/>
           </b-button>
         </template>
@@ -78,6 +82,7 @@
 
 <script>
 import sharePost from '@/graphql/Post/sharePost.graphql'
+import likePost from '@/graphql/Post/likePost.graphql'
 import deletePostById from '@/graphql/Post/deletePostById.graphql'
 import updatePost from '@/graphql/Post/updatePost.graphql'
 import moment from 'moment'
@@ -111,9 +116,27 @@ export default {
           console.log(graphQLErrors)
         })
     },
-    userShared: function (post) {
+    likePost: function (_id) {
+      this.$refs.topProgress.start()
+      this.$apollo.mutate({
+        mutation: likePost,
+        variables: {
+          postID: _id
+        }
+      })
+        .then(() => {
+          this.$store.dispatch('fetchAllPosts')
+          this.$store.dispatch('fetchUserPosts')
+          this.$refs.topProgress.done()
+        })
+        .catch(({ graphQLErrors }) => {
+          this.$refs.topProgress.done()
+          console.log(graphQLErrors)
+        })
+    },
+    userLiked: function (post) {
       if (this.$store.state.currentUser && post) {
-        return post.shares.some(userID => this.$store.state.currentUser._id === userID ? 1 : 0)
+        return post.likes.some(userID => this.$store.state.currentUser._id === userID)
       }
     },
     deletePost: function (_id) {

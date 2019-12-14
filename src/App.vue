@@ -7,7 +7,7 @@
         <b-navbar-toggle target="nav_collapse"/>
         <b-collapse is-nav id="nav_collapse">
           <b-navbar-nav>
-            <b-nav-item to="/dashboard"><i class="fa fa-columns" > Dashboard </i></b-nav-item>
+            <b-nav-item to="/dashboard"><i class="fa fa-columns"> Dashboard </i></b-nav-item>
           </b-navbar-nav>
           <b-navbar-nav class="ml-auto">
             <b-nav-item-dropdown right id="dropdown">

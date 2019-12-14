@@ -19,15 +19,15 @@
         </div>
         <b-input-group v-if="allPosts.length" class="mt-3" style="margin-bottom: 10px">
           <template v-slot:append>
-            <b-dropdown variant="outline-secondary">
+            <b-dropdown variant="outline-secondary" id="searchDropdown">
               <template v-slot:button-content>
                 &#x1f50d;
               </template>
-              <b-dropdown-item @click="searchBy='message'">message</b-dropdown-item>
-              <b-dropdown-item @click="searchBy='creatorFullName'">name</b-dropdown-item>
+              <b-dropdown-item id="msgD" @click="searchBy='message'">message</b-dropdown-item>
+              <b-dropdown-item id="nameD" @click="searchBy='creatorFullName'">name</b-dropdown-item>
             </b-dropdown>
           </template>
-          <b-form-input v-model="searchQuery" placeholder="Search posts..."/>
+          <b-form-input id="searchInput" v-model="searchQuery" placeholder="Search posts..."/>
         </b-input-group>
       </b-col>
     </b-row>

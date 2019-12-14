@@ -11,5 +11,6 @@ mutation createPost($message: String!, $links: [LinkInput!]) {
         updatedTime
         links
         shares
+        likes
     }
 }

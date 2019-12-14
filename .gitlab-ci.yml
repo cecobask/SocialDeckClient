@@ -14,7 +14,7 @@ cache:
     - cache/Cypress
     - node_modules
 
-build_test_staging:
+build_staging:
   image: cypress/base:10
   stage: build
   variables:
@@ -33,7 +33,7 @@ build_test_staging:
       - dist/*
     expire_in: 28 days
 
-build_test_prod:
+build_prod:
   image: cypress/base:10
   stage: build
   variables:

@@ -8,5 +8,6 @@ mutation sharePost($postID: String!) {
         updatedTime
         links
         shares
+        likes
     }
 }

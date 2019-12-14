@@ -29,6 +29,8 @@ A page that displays current user's posts. If empty, it will display a feedback 
 
 * Tests execution is being recorded and uploaded to [cypress.io](https://dashboard.cypress.io/projects/n4jj7m/runs "https://dashboard.cypress.io/projects/n4jj7m/runs").
 * Extensive authentication tests.
+* Selectors not covered in class: '.children()', ':nth-child(int)', 'clear()', 'trigger()'
+* Assertions not covered in class: 'be.disabled', 'have.class', 'be.visible', 'have.value', 'exist'
 * Clean test code, made possible through using helper methods stored in ```/support/helpers.js``` and fixtures.
 * Utilised bundling/building and test scripts provided by Vue.js by default.
 * Custom cypress config.

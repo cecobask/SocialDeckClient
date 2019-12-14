@@ -1,5 +1,5 @@
-mutation deletePostById($_id: String!) {
-    deletePostById(_id: $_id) {
+mutation likePost($postID: String!) {
+    likePost(postID: $postID) {
         _id
         creatorID
         creatorFullName
